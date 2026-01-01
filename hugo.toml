@@ -1,0 +1,72 @@
+baseURL = 'https://log.artfaal.ru/'
+languageCode = 'ru'
+title = 'artfaal.log'
+theme = 'PaperMod'
+
+enableRobotsTXT = true
+buildDrafts = false
+buildFuture = false
+buildExpired = false
+
+[minify]
+disableXML = true
+minifyOutput = true
+
+[params]
+env = "production"
+title = "artfaal.log"
+description = "Длинные посты и мысли из Telegram канала"
+author = "artfaal"
+defaultTheme = "auto"
+ShowReadingTime = true
+ShowShareButtons = false
+ShowPostNavLinks = true
+ShowBreadCrumbs = true
+ShowCodeCopyButtons = true
+ShowWordCount = true
+ShowRssButtonInSectionTermList = true
+UseHugoToc = true
+disableSpecial1stPost = false
+disableScrollToTop = false
+comments = false
+hidemeta = false
+hideSummary = false
+showtoc = true
+tocopen = false
+
+[params.homeInfoParams]
+Title = "Добро пожаловать в artfaal.log"
+Content = "Здесь я публикую длинные посты, которые не помещаются в Telegram. [Подписывайтесь на канал](http://t.me/artfaal_log)!"
+
+[[params.socialIcons]]
+name = "telegram"
+url = "http://t.me/artfaal_log"
+
+[[params.socialIcons]]
+name = "github"
+url = "https://github.com/artfaal"
+
+[outputs]
+home = ["HTML", "RSS", "JSON"]
+
+[languages.ru]
+languageName = "Русский"
+weight = 1
+
+[[languages.ru.menu.main]]
+identifier = "posts"
+name = "Посты"
+url = "/posts/"
+weight = 10
+
+[[languages.ru.menu.main]]
+identifier = "tags"
+name = "Теги"
+url = "/tags/"
+weight = 20
+
+[[languages.ru.menu.main]]
+identifier = "search"
+name = "Поиск"
+url = "/search/"
+weight = 30
