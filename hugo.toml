@@ -35,8 +35,8 @@ showtoc = true
 tocopen = false
 
 [params.homeInfoParams]
-Title = "Добро пожаловать в artfaal.log"
-Content = "Здесь я публикую длинные посты, которые не помещаются в Telegram. [Подписывайтесь на канал](http://t.me/artfaal_log)!"
+Title = "Хей Хо!"
+Content = "Здесь длинные посты, которые не помещаются в Telegram. [Подписывайтесь на канал](http://t.me/artfaal_log)!"
 
 [[params.socialIcons]]
 name = "telegram"
