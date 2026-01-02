@@ -41,104 +41,56 @@ class ImageOptimizer:
         self.verbose = verbose
         self.stats: List[Dict] = []
 
-    def optimize_jpeg(self, input_path: Path, output_path: Path) -> Tuple[int, int]:
-        """Оптимизирует JPEG изображение"""
+    def convert_to_webp(self, input_path: Path, output_path: Path) -> Tuple[int, int]:
+        """Конвертирует любое изображение в WebP с высоким качеством"""
         original_size = input_path.stat().st_size
 
         with Image.open(input_path) as img:
-            # Конвертируем в RGB если нужно
-            if img.mode in ('RGBA', 'LA', 'P'):
-                background = Image.new('RGB', img.size, (255, 255, 255))
-                if img.mode == 'P':
+            # Конвертируем в RGB/RGBA
+            if img.mode == 'P':
+                img = img.convert('RGBA')
+            elif img.mode not in ('RGB', 'RGBA'):
+                if 'A' in img.mode or img.mode == 'LA':
                     img = img.convert('RGBA')
-                background.paste(img, mask=img.split()[-1] if img.mode in ('RGBA', 'LA') else None)
-                img = background
-            elif img.mode != 'RGB':
-                img = img.convert('RGB')
+                else:
+                    img = img.convert('RGB')
 
-            # Изменяем размер если нужно
-            if img.width > self.max_width:
-                ratio = self.max_width / img.width
-                new_height = int(img.height * ratio)
-                img = img.resize((self.max_width, new_height), Image.Resampling.LANCZOS)
+            # Изменяем размер если нужно (сохраняя пропорции)
+            if max(img.width, img.height) > self.max_width:
+                if img.width > img.height:
+                    new_width = self.max_width
+                    new_height = int(img.height * (self.max_width / img.width))
+                else:
+                    new_height = self.max_width
+                    new_width = int(img.width * (self.max_width / img.height))
+                img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
-            # Сохраняем с оптимизацией
+            # Сохраняем как WebP с высоким качеством
             img.save(
                 output_path,
-                'JPEG',
+                'WEBP',
                 quality=self.quality,
-                optimize=True,
-                progressive=True
+                method=6  # Лучшее сжатие (медленнее, но качественнее)
             )
-
-        new_size = output_path.stat().st_size
-        return original_size, new_size
-
-    def convert_heic_to_jpeg(self, input_path: Path, output_path: Path) -> Tuple[int, int]:
-        """Конвертирует HEIC в JPEG"""
-        original_size = input_path.stat().st_size
-
-        with Image.open(input_path) as img:
-            # Конвертируем в RGB
-            if img.mode != 'RGB':
-                img = img.convert('RGB')
-
-            # Изменяем размер если нужно
-            if img.width > self.max_width:
-                ratio = self.max_width / img.width
-                new_height = int(img.height * ratio)
-                img = img.resize((self.max_width, new_height), Image.Resampling.LANCZOS)
-
-            # Сохраняем как JPEG
-            img.save(
-                output_path,
-                'JPEG',
-                quality=self.quality,
-                optimize=True,
-                progressive=True
-            )
-
-        new_size = output_path.stat().st_size
-        return original_size, new_size
-
-    def convert_tiff_to_png(self, input_path: Path, output_path: Path) -> Tuple[int, int]:
-        """Конвертирует TIFF в оптимизированный PNG"""
-        original_size = input_path.stat().st_size
-
-        with Image.open(input_path) as img:
-            # Сохраняем как PNG с оптимизацией
-            img.save(output_path, 'PNG', optimize=True)
-
-        new_size = output_path.stat().st_size
-        return original_size, new_size
-
-    def optimize_png(self, input_path: Path, output_path: Path) -> Tuple[int, int]:
-        """Оптимизирует PNG изображение"""
-        original_size = input_path.stat().st_size
-
-        with Image.open(input_path) as img:
-            img.save(output_path, 'PNG', optimize=True)
 
         new_size = output_path.stat().st_size
         return original_size, new_size
 
     def process_image(self, input_path: Path, output_path: Path, file_type: str) -> Dict:
-        """Обрабатывает одно изображение"""
+        """Обрабатывает одно изображение - конвертирует в WebP"""
         try:
-            if file_type == 'jpeg':
-                orig_size, new_size = self.optimize_jpeg(input_path, output_path)
-                action = 'JPEG оптимизирован'
-            elif file_type == 'heic':
-                orig_size, new_size = self.convert_heic_to_jpeg(input_path, output_path)
-                action = 'HEIC → JPEG'
-            elif file_type == 'tiff':
-                orig_size, new_size = self.convert_tiff_to_png(input_path, output_path)
-                action = 'TIFF → PNG'
-            elif file_type == 'png':
-                orig_size, new_size = self.optimize_png(input_path, output_path)
-                action = 'PNG оптимизирован'
-            else:
-                return {'success': False, 'error': f'Неизвестный тип: {file_type}'}
+            # Все форматы конвертируем в WebP
+            orig_size, new_size = self.convert_to_webp(input_path, output_path)
+
+            # Определяем действие для статистики
+            format_map = {
+                'jpeg': 'JPEG → WebP',
+                'heic': 'HEIC → WebP',
+                'tiff': 'TIFF → WebP',
+                'png': 'PNG → WebP',
+                'webp': 'WebP оптимизирован'
+            }
+            action = format_map.get(file_type, f'{file_type.upper()} → WebP')
 
             compression = int((1 - new_size / orig_size) * 100) if orig_size > 0 else 0
 
@@ -198,6 +150,8 @@ def get_file_type(filename: str) -> Optional[str]:
         return 'tiff'
     elif ext == '.png':
         return 'png'
+    elif ext == '.webp':
+        return 'webp'
     elif ext in ['.mov', '.mp4', '.avi']:
         return 'video'
 
@@ -338,15 +292,8 @@ def process_post(
         else:
             new_name = f"img_{idx:02d}"
 
-        # Определяем расширение выходного файла
-        if file_type == 'heic':
-            new_ext = '.jpg'
-        elif file_type == 'tiff':
-            new_ext = '.png'
-        elif file_type == 'jpeg':
-            new_ext = '.jpg'
-        else:  # png
-            new_ext = '.png'
+        # Все файлы конвертируются в WebP
+        new_ext = '.webp'
 
         files_to_process.append((file_path, new_name + new_ext, idx))
         processed_files.add(file_path.name)  # Используем реальное имя файла
@@ -364,23 +311,22 @@ def process_post(
             print(f"   ⚠️  Неиспользуемых файлов: {len(unused_files)}")
 
     if dry_run:
-        print("\n🔍 DRY-RUN режим: предпросмотр без выполнения\n")
-        print("=" * 60)
-        print(f"{'Исходный файл':<30} {'→':<3} {'Новый файл':<20}")
-        print("=" * 60)
+        print("\n" + "=" * 70)
+        print("🔍 DRY-RUN РЕЖИМ: Предпросмотр без выполнения")
+        print("=" * 70)
+        print(f"{'Исходный файл':<35} {'→':<3} {'Новый файл (WebP)':<30}")
+        print("─" * 70)
         for file_path, new_name, idx in files_to_process:
             file_type = get_file_type(file_path.name)
-            action = ""
-            if file_type == 'heic':
-                action = " (HEIC→JPEG)"
-            elif file_type == 'tiff':
-                action = " (TIFF→PNG)"
-            print(f"{file_path.name:<30} → {new_name:<20}{action}")
-        print("=" * 60)
-        print(f"\nВсего файлов к обработке: {len(files_to_process)}")
-        print(f"Выходная директория: {output_dir}")
+            print(f"{file_path.name:<35} → {new_name:<30}")
+        print("─" * 70)
+        print(f"📊 Всего файлов к обработке: {len(files_to_process)}")
+        print(f"📁 Выходная директория: {output_dir}")
+        print(f"⚙️  Качество WebP: {quality}")
+        print(f"📐 Макс размер: {max_width}px")
         if hugo_path:
-            print(f"Hugo path: {hugo_path}")
+            print(f"🚀 Hugo path: {hugo_path}")
+        print("=" * 70)
         return True
 
     # Создаем выходную директорию
@@ -531,13 +477,13 @@ def main():
         '--max-width',
         type=int,
         default=1600,
-        help='Максимальная ширина для JPEG (по умолчанию: 1600)'
+        help='Максимальный размер (длинная сторона) для WebP (по умолчанию: 1600)'
     )
     parser.add_argument(
         '--quality',
         type=int,
-        default=82,
-        help='Качество JPEG 1-100 (по умолчанию: 82)'
+        default=95,
+        help='Качество WebP 1-100 (по умолчанию: 95 - около максимального)'
     )
     parser.add_argument(
         '--dry-run',

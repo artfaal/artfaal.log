@@ -2,9 +2,10 @@
   Hugo Markdown render hook for images (responsive + lazy-load).
 
   - Local Page Resources only are processed
-  - WebP only (no fallback formats)
-  - Quality: 80
-  - Longest side capped at 1200px (via Fit 1200x1200)
+  - WebP format with high quality (q95)
+  - Source images are pre-optimized by optimize_post_images.py
+  - Render hook only creates responsive sizes (no quality compression)
+  - Longest side capped at 1600px
   - Responsive srcset for mobile/retina
   - Native lazy-loading via loading="lazy"
   - Optimized for PaperMod theme
@@ -43,24 +44,26 @@
   {{- else -}}
 
     {{- /* Settings */ -}}
-    {{- $q := "webp q80" -}}
-    {{- $max := "1200x1200" -}}
+    {{- $q := "webp q95" -}}
+    {{- $maxWidth := 1600 -}}
 
-    {{- /* Generate a set of responsive widths (all capped by Fit to preserve aspect) */ -}}
-    {{- $wList := slice 360 540 720 960 1200 -}}
+    {{- /* Generate a set of responsive widths (preserving aspect ratio) */ -}}
+    {{- $wList := slice 360 540 720 960 1200 1600 -}}
 
     {{- /* The "main" image (max size) is used for width/height to prevent CLS */ -}}
-    {{- $main := ($img.Fit $max).Process $q -}}
+    {{- /* Resize only by width to preserve aspect ratio */ -}}
+    {{- $main := ($img.Resize (printf "%dx" $maxWidth)).Process $q -}}
 
     {{- /* Build srcset */ -}}
     {{- $srcset := slice -}}
     {{- range $wList -}}
-      {{- $candidate := ($img.Fit (printf "%dx%d" . .)).Process $q -}}
+      {{- /* Resize by width only - this preserves aspect ratio! */ -}}
+      {{- $candidate := ($img.Resize (printf "%dx" .)).Process $q -}}
       {{- $srcset = $srcset | append (printf "%s %dw" $candidate.RelPermalink $candidate.Width) -}}
     {{- end -}}
 
-    {{- /* sizes: PaperMod content column is ~720px on desktop */ -}}
-    {{- $sizes := "(max-width: 768px) 100vw, 720px" -}}
+    {{- /* sizes: Custom width 900px (1000px on large screens) */ -}}
+    {{- $sizes := "(max-width: 768px) 100vw, (max-width: 1400px) 900px, 1000px" -}}
 
     <figure>
       <img
