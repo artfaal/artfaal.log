@@ -3,6 +3,7 @@
 /resources/_gen/
 /assets/jsconfig.json
 hugo_stats.json
+.hugo_build.lock
 
 # OS
 .DS_Store
@@ -18,3 +19,8 @@ Thumbs.db
 # Temporary files
 *.log
 *.tmp
+
+# Python
+venv/
+__pycache__/
+*.pyc
