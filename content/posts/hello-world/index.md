@@ -1,7 +1,7 @@
 ---
 title: "Добро пожаловать в artfaal.log!"
 date: 2026-01-01T12:00:00+03:00
-draft: false
+draft: true
 tags: ["meta", "первый пост"]
 author: "artfaal"
 description: "Первый пост в блоге artfaal.log - длинные посты из Telegram канала"
