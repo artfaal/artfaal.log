@@ -1,0 +1,66 @@
+~version: "2.1"
+
+########################################
+# Template for artfaal.log
+# Hugo + PaperMod theme
+# Author: artfaal
+########################################
+
+# Apply only to blog posts
+?exists: //article[contains(concat(" ", normalize-space(@class), " "), " post-single ")]
+?path: /posts/.+
+
+########################################
+# Variables
+########################################
+$article: //article[contains(concat(" ", normalize-space(@class), " "), " post-single ")]
+$body:    $article//div[contains(concat(" ", normalize-space(@class), " "), " post-content ")]
+
+########################################
+# IV Properties
+########################################
+title:       $article//h1[contains(concat(" ", normalize-space(@class), " "), " post-title ")]
+subtitle:    $article//div[contains(concat(" ", normalize-space(@class), " "), " post-description ")]
+author:      "artfaal"
+description: //meta[@name="description"]/@content
+site_name:   //meta[@property="og:site_name"]/@content
+image_url:   //meta[@property="og:image"]/@content
+
+# Published date (ISO 8601 from meta)
+@datetime:       //meta[@property="article:published_time"]/@content
+published_date:  $@
+
+# Cover image
+cover: $article//figure[contains(concat(" ", normalize-space(@class), " "), " entry-cover ")]//img
+
+########################################
+# Body
+########################################
+body: $body
+
+########################################
+# Content cleanup
+########################################
+
+# Remove navigation elements
+@remove: $article//div[contains(concat(" ", normalize-space(@class), " "), " toc ")]
+@remove: $article//div[contains(concat(" ", normalize-space(@class), " "), " breadcrumbs ")]
+@remove: $article//footer[contains(concat(" ", normalize-space(@class), " "), " post-footer ")]
+
+# Remove PaperMod anchor links next to headings
+@remove: $body//a[contains(concat(" ", normalize-space(@class), " "), " anchor ")]
+
+# Remove first H1 in body (duplicates title)
+@remove: ($body//h1)[1]
+
+# Extract images and figures from paragraphs (IV doesn't support img inside p)
+@split_parent: $body//p/figure
+@split_parent: $body//p/img
+
+# Remove empty paragraphs after splitting
+@remove: $body//p[not(normalize-space()) and not(.//img) and not(.//a) and not(.//figure)]
+
+########################################
+# Channel join button
+########################################
+channel: @artfaal_log
