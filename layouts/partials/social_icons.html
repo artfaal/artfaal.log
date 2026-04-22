@@ -1,0 +1,19 @@
+{{- /* Расширенный social_icons — поддерживает кастомное имя "web" (глобус),
+       остальные делегируются в PaperMod partial svg.html */ -}}
+<div class="social-icons" {{ with .align }}align="{{ . }}" {{- end }}>
+    {{- range site.Params.socialIcons }}
+    <a href="{{ trim .url " " | safeURL }}" target="_blank" rel="noopener noreferrer me"
+        title="{{ (.title | default .name) | title }}">
+        {{- if eq .name "web" }}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+        {{- else }}
+        {{ partial "svg.html" . }}
+        {{- end }}
+    </a>
+    {{- end }}
+</div>

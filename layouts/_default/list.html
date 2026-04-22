@@ -1,0 +1,113 @@
+{{- define "main" }}
+
+{{- if (and site.Params.profileMode.enabled .IsHome) }}
+{{- partial "index_profile.html" . }}
+{{- else }}
+
+{{- if and (not .IsHome) .Title }}
+<header class="page-header page-header-cli">
+  <div class="ph-slug">
+    <span class="ph-slug-pfx">// section ::</span>
+    <span class="ph-slug-name">{{ .Title | lower }}</span>
+    {{- if and (or (eq .Kind `term`) (eq .Kind `section`)) (.Param "ShowRssButtonInSectionTermList") }}
+    {{- with .OutputFormats.Get "rss" }}
+    <a class="ph-rss" href="{{ .RelPermalink }}" title="RSS" aria-label="RSS">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" height="13" width="13">
+        <path d="M4 11a9 9 0 0 1 9 9" />
+        <path d="M4 4a16 16 0 0 1 16 16" />
+        <circle cx="5" cy="19" r="1" />
+      </svg>
+    </a>
+    {{- end }}
+    {{- end }}
+  </div>
+  <h1>{{ .Title }}</h1>
+  {{- if .Description }}
+  <p class="post-description">{{ .Description | markdownify }}</p>
+  {{- end }}
+</header>
+{{- end }}
+
+{{- if .Content }}
+<div class="post-content">
+  {{- if not (.Param "disableAnchoredHeadings") }}
+  {{- partial "anchored_headings.html" .Content -}}
+  {{- else }}{{ .Content }}{{ end }}
+</div>
+{{- end }}
+
+{{- $pages := union .RegularPages .Sections }}
+
+{{- if .IsHome }}
+{{- $pages = where site.RegularPages "Type" "in" site.Params.mainSections }}
+{{- $pages = where $pages "Params.hiddenInHomeList" "!=" "true"  }}
+{{- end }}
+
+{{- $paginator := .Paginate $pages }}
+
+{{- if and .IsHome site.Params.homeInfoParams (eq $paginator.PageNumber 1) }}
+{{- partial "home_info.html" . }}
+{{- end }}
+
+{{- if .IsHome }}
+<div class="pl-section-label">// latest</div>
+{{- end }}
+
+<ol class="post-list reveal stagger" aria-label="posts">
+  {{- $term := .Data.Term -}}
+  {{- $total := len $paginator.Pages -}}
+  {{- range $i, $p := $paginator.Pages -}}
+  {{- $slug := path.Base (strings.TrimSuffix "/" .RelPermalink) -}}
+  <li class="pl-row">
+    <a class="pl-link" href="{{ .Permalink }}">
+      <span class="pl-num">{{ printf "%02d" (add $i 1) }}</span>
+      {{- $coverImg := "" -}}
+      {{- $coverPath := .Params.cover.image -}}
+      {{- if $coverPath -}}
+        {{- with .Resources.GetMatch $coverPath -}}
+          {{- $coverImg = .Fill "200x130 Center webp q82" -}}
+        {{- end -}}
+      {{- end -}}
+      {{- if $coverImg }}
+      <span class="pl-cover">
+        <img src="{{ $coverImg.RelPermalink }}" width="{{ $coverImg.Width }}" height="{{ $coverImg.Height }}" alt="" loading="lazy">
+      </span>
+      {{- else }}
+      <span class="pl-cover pl-cover-empty" aria-hidden="true"></span>
+      {{- end }}
+      <span class="pl-title-wrap">
+        <span class="pl-title">{{ .Title }}</span>
+        {{- if .Draft }}<span class="pl-draft">draft</span>{{- end }}
+        {{- if (ne (.Param "hideSummary") true) }}
+        {{- with .Description }}<span class="pl-summary">{{ . }}</span>
+        {{- else }}{{- with (.Summary | plainify | htmlUnescape) }}<span class="pl-summary">{{ . | truncate 140 }}</span>{{- end -}}
+        {{- end }}
+        {{- end }}
+      </span>
+      <span class="pl-leader" aria-hidden="true"></span>
+      <span class="pl-meta">
+        {{- if not .Date.IsZero }}<span class="pl-date">{{ .Date | time.Format ":date_short" }}</span>{{- end }}
+      </span>
+      <span class="pl-arrow" aria-hidden="true">→</span>
+    </a>
+  </li>
+  {{- end }}
+</ol>
+
+{{- if gt $paginator.TotalPages 1 }}
+<footer class="page-footer">
+  <nav class="pagination pl-pagination">
+    {{- if $paginator.HasPrev }}
+    <a class="prev" href="{{ $paginator.Prev.URL | absURL }}">«&nbsp;prev{{- if (.Param "ShowPageNums") }} · {{- sub $paginator.PageNumber 1 }}/{{ $paginator.TotalPages }}{{- end }}</a>
+    {{- end }}
+    {{- if $paginator.HasNext }}
+    <a class="next" href="{{ $paginator.Next.URL | absURL }}">next{{- if (.Param "ShowPageNums") }} · {{- add 1 $paginator.PageNumber }}/{{ $paginator.TotalPages }}{{- end }}&nbsp;»</a>
+    {{- end }}
+  </nav>
+</footer>
+{{- end }}
+
+{{- end }}{{/* end profileMode */}}
+
+{{- end }}{{- /* end main */ -}}

@@ -1,0 +1,18 @@
+{{- /* Компактный meta-footer для карточек списка — одна строка через точки */ -}}
+{{- $scratch := newScratch -}}
+
+{{- if not .Date.IsZero -}}
+{{- $scratch.Add "meta" (slice (printf "<span class=\"pm-date\" title=\"%s\">%s</span>" (.Date) (.Date | time.Format (default ":date_medium" site.Params.DateFormat)))) -}}
+{{- end -}}
+
+{{- if (.Param "ShowReadingTime") -}}
+{{- $scratch.Add "meta" (slice (printf "<span class=\"pm-read\">%d min</span>" .ReadingTime)) -}}
+{{- end -}}
+
+{{- if (.Param "ShowWordCount") -}}
+{{- $scratch.Add "meta" (slice (printf "<span class=\"pm-words\">%d words</span>" .WordCount)) -}}
+{{- end -}}
+
+{{- with ($scratch.Get "meta") -}}
+<span class="pm-row">{{ delimit . "<span class=\"pm-sep\">·</span>" | safeHTML }}</span>
+{{- end -}}

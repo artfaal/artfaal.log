@@ -1,0 +1,29 @@
+{{- $currentPage := . -}}
+<header class="topbar">
+    <div class="tb-inner">
+        <a class="tb-brand" href="{{ "" | absLangURL }}" accesskey="h" title="{{ site.Title }} (Alt + H)">
+            <span class="tb-dot" aria-hidden="true"></span>
+            <span class="tb-brand-label">{{ site.Title }}</span>
+        </a>
+
+        <nav class="tb-nav" aria-label="primary">
+            <span class="tb-nav-flag" aria-hidden="true">--section=</span>
+            <ul class="tb-menu">
+                {{- range site.Menus.main }}
+                {{- $menu_item_url := (cond (strings.HasSuffix .URL "/") .URL (printf "%s/" .URL)) | absLangURL }}
+                {{- $page_url := $currentPage.Permalink | absLangURL }}
+                {{- $is_search := eq (site.GetPage .KeyName).Layout `search` }}
+                {{- $is_active := eq $menu_item_url $page_url }}
+                <li>
+                    <a href="{{ .URL | absLangURL }}"
+                        {{- if $is_active }} class="is-active" aria-current="page"{{- end }}
+                        {{- cond $is_search (" accesskey=/" | safeHTMLAttr) ("" | safeHTMLAttr) }}
+                        title="{{ .Title | default .Name }}{{ cond $is_search " (Alt + /)" "" }}">
+                        {{- .Name | lower -}}
+                    </a>
+                </li>
+                {{- end }}
+            </ul>
+        </nav>
+    </div>
+</header>

@@ -17,7 +17,8 @@ env = "production"
 title = "artfaal.log"
 description = "Длинные посты и мысли из Telegram канала"
 author = "artfaal"
-defaultTheme = "auto"
+defaultTheme = "dark"
+disableThemeToggle = true
 ShowReadingTime = true
 ShowShareButtons = false
 ShowPostNavLinks = true
@@ -37,6 +38,11 @@ tocopen = false
 [params.homeInfoParams]
 Title = "Хей Хо!"
 Content = "Здесь длинные посты, которые не помещаются в Telegram. [Подписывайтесь на канал](http://t.me/artfaal_log)!"
+
+[[params.socialIcons]]
+name = "web"
+title = "artfaal.ru"
+url = "https://artfaal.ru"
 
 [[params.socialIcons]]
 name = "telegram"

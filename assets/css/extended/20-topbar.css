@@ -1,0 +1,134 @@
+/* ===========================================================================
+   TOPBAR — монотерминальная шапка с pulse-dot брендом и flag-nav
+   =========================================================================== */
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: color-mix(in oklab, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+}
+
+.tb-inner {
+    max-width: calc(var(--nav-width) + var(--gap) * 2);
+    margin: 0 auto;
+    padding: 0 var(--gap);
+    min-height: var(--header-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+/* Brand */
+
+.tb-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--fg);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.tb-brand:hover {
+    color: var(--accent);
+}
+
+.tb-brand:hover .tb-dot {
+    box-shadow: 0 0 10px 2px color-mix(in oklab, var(--accent) 55%, transparent);
+}
+
+.tb-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 6px 1px color-mix(in oklab, var(--accent) 35%, transparent);
+    animation: tb-pulse 2.4s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+@keyframes tb-pulse {
+    0%, 100% { opacity: 0.55; transform: scale(1); }
+    50%      { opacity: 1;    transform: scale(1.12); }
+}
+
+/* Navigation */
+
+.tb-nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 13px;
+}
+
+.tb-nav-flag {
+    color: var(--muted-2);
+    letter-spacing: 0.03em;
+}
+
+.tb-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+}
+
+.tb-menu li + li::before {
+    content: "|";
+    color: var(--line-2);
+    margin: 0 10px;
+    pointer-events: none;
+}
+
+.tb-menu a {
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    transition: color 0.15s ease;
+    padding: 2px 0;
+}
+
+.tb-menu a:hover {
+    color: var(--fg);
+}
+
+.tb-menu a.is-active {
+    color: var(--accent);
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+    .tb-inner {
+        gap: 10px;
+        padding: 0 16px;
+    }
+    .tb-nav {
+        font-size: 12px;
+        gap: 6px;
+    }
+    .tb-menu li + li::before {
+        margin: 0 6px;
+    }
+    .tb-nav-flag {
+        display: none;
+    }
+}
+
+@media (max-width: 420px) {
+    .tb-brand-label {
+        display: none;
+    }
+}

@@ -1,0 +1,145 @@
+/* ===========================================================================
+   POST HEADER (single) — CLI-стиль: // post :: slug, $ date →, $ tags →
+   =========================================================================== */
+
+.post-header-cli {
+    padding-top: 8px;
+    padding-bottom: 20px;
+    margin-bottom: 32px;
+    border-bottom: 1px dashed var(--line);
+}
+
+.ph-slug {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    margin-bottom: 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ph-slug-pfx {
+    color: var(--muted-2);
+}
+
+.ph-slug-name {
+    color: var(--accent);
+    font-weight: 500;
+}
+
+.post-header-cli .post-title {
+    margin: 0 0 12px;
+    font-size: clamp(28px, 4.4vw, 48px);
+    line-height: 1.1;
+    letter-spacing: -0.045em;
+}
+
+.post-header-cli .post-description {
+    font-family: var(--sans);
+    font-style: normal;
+    color: var(--muted);
+    font-size: 16px;
+    margin: 0 0 24px;
+    max-width: 64ch;
+    text-wrap: pretty;
+}
+
+/* CLI-блок с полями (как на сайте: dot-leader rows) */
+
+.ph-cli {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.5;
+    margin-top: 8px;
+}
+
+.ph-row {
+    display: grid;
+    grid-template-columns: 92px 14px 1fr;
+    align-items: baseline;
+    gap: 0 8px;
+}
+
+.ph-flag {
+    color: var(--muted);
+    letter-spacing: 0.02em;
+}
+
+.ph-arrow {
+    color: var(--muted-2);
+    text-align: center;
+    font-weight: 400;
+}
+
+.ph-val {
+    color: var(--fg-2);
+    letter-spacing: 0.01em;
+}
+
+.ph-tags {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+}
+
+.ph-tag {
+    color: var(--muted);
+    text-decoration: none;
+    box-shadow: none;
+    transition: color 0.15s ease;
+}
+
+.ph-tag:hover {
+    color: var(--accent);
+}
+
+/* Footer "// end of file" */
+
+.post-footer-end {
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px dashed var(--line);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted-2);
+    letter-spacing: 0.06em;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+    .ph-row {
+        grid-template-columns: 80px 12px 1fr;
+        font-size: 12px;
+    }
+    .post-header-cli {
+        padding-bottom: 16px;
+        margin-bottom: 24px;
+    }
+}
+
+/* ===========================================================================
+   POST META (list entry footer) — компактная одна строка
+   =========================================================================== */
+
+.pm-row {
+    display: inline-flex;
+    gap: 8px;
+    align-items: baseline;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    color: var(--muted);
+}
+
+.pm-sep {
+    color: var(--line-2);
+}
+
+.pm-date {
+    color: var(--fg-2);
+}

@@ -1,0 +1,33 @@
+{{- define "main" }}
+
+{{- if .Title }}
+<header class="page-header page-header-cli">
+  <div class="ph-slug">
+    <span class="ph-slug-pfx">// section ::</span>
+    <span class="ph-slug-name">{{ .Title | lower }}</span>
+  </div>
+  <h1>{{ .Title }}</h1>
+  {{- if .Description }}
+  <p class="post-description">{{ .Description | markdownify }}</p>
+  {{- end }}
+</header>
+{{- end }}
+
+<ul class="terms-cloud reveal stagger" aria-label="tags">
+  {{- $type := .Type }}
+  {{- range $key, $value := .Data.Terms.Alphabetical }}
+  {{- $name := .Name }}
+  {{- $count := .Count }}
+  {{- with site.GetPage (printf "/%s/%s" $type $name) }}
+  <li class="tc-item">
+    <a class="tc-link" href="{{ .Permalink }}">
+      <span class="tc-hash" aria-hidden="true">#</span>
+      <span class="tc-name">{{ .Name | lower }}</span>
+      <span class="tc-count" aria-label="{{ $count }} posts">{{ $count }}</span>
+    </a>
+  </li>
+  {{- end }}
+  {{- end }}
+</ul>
+
+{{- end }}{{/* end main */ -}}

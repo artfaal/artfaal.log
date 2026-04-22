@@ -1,0 +1,55 @@
+/* ===========================================================================
+   CRT-АТМОСФЕРА — лёгкий retro-оттенок: radial glow в углах + мягкие scanlines
+   Для блога намеренно слабее, чем на artfaal.ru: длинный текст не должен дрожать
+   =========================================================================== */
+
+body {
+    position: relative;
+    isolation: isolate;
+}
+
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Мягкие радиальные подсветки по углам */
+body::before {
+    background:
+        radial-gradient(circle at 10% 0%,
+            color-mix(in oklab, var(--accent) 10%, transparent) 0%,
+            transparent 38%),
+        radial-gradient(circle at 92% 95%,
+            color-mix(in oklab, var(--accent-2) 9%, transparent) 0%,
+            transparent 42%);
+    opacity: 0.85;
+}
+
+/* Едва заметные scanlines — только на больших экранах, где мало влияют на чтение */
+body::after {
+    background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 2px,
+        color-mix(in oklab, var(--fg) 3%, transparent) 3px,
+        transparent 3px,
+        transparent 4px
+    );
+    mix-blend-mode: overlay;
+    opacity: 0.18;
+}
+
+@media (max-width: 700px) {
+    /* На мобиле scanlines выключаем — текст важнее эстетики */
+    body::after { display: none; }
+    body::before { opacity: 0.6; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body::before { opacity: 0.5; }
+    body::after  { display: none; }
+}

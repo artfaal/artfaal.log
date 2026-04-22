@@ -1,0 +1,339 @@
+/* ===========================================================================
+   HOME HERO — prompt-терминал, как на artfaal.ru
+   =========================================================================== */
+
+.home-hero {
+    padding: 32px 0 24px;
+    margin-bottom: 32px;
+    border-bottom: 1px dashed var(--line);
+}
+
+.hh-prompt {
+    font-family: var(--mono);
+    font-size: clamp(12px, 1.4vw, 14px);
+    letter-spacing: 0.01em;
+    margin-bottom: 20px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.hh-user   { color: var(--accent); font-weight: 500; }
+.hh-host   { color: var(--fg-2); }
+.hh-tilde  { color: var(--accent-2); }
+.hh-sep    { color: var(--muted-2); }
+.hh-cmd    { color: var(--fg); }
+
+.hh-cursor {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.05em;
+    background: var(--accent);
+    vertical-align: text-bottom;
+    margin-left: 4px;
+    animation: hh-blink 1.05s steps(1) infinite;
+}
+
+@keyframes hh-blink {
+    50% { opacity: 0; }
+}
+
+.hh-title {
+    font-family: var(--display);
+    font-size: clamp(36px, 6vw, 64px);
+    line-height: 1.02;
+    letter-spacing: -0.055em;
+    margin: 0 0 18px;
+    color: var(--fg);
+}
+
+.hh-content {
+    color: var(--fg-2);
+    font-size: clamp(15px, 1.8vw, 18px);
+    line-height: 1.55;
+    max-width: 58ch;
+    margin-bottom: 22px;
+}
+
+.hh-content a {
+    color: var(--fg);
+    text-decoration: none;
+    box-shadow: inset 0 -1px 0 var(--accent);
+    transition: color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.hh-content a:hover {
+    color: var(--accent);
+    box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+.hh-foot {
+    display: flex;
+    align-items: center;
+}
+
+/* Social icons внутри home_info */
+.hh-foot .social-icons a {
+    color: var(--muted);
+    margin-right: 14px;
+    transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.hh-foot .social-icons a:hover {
+    color: var(--accent);
+    transform: translateY(-2px);
+}
+
+/* ===========================================================================
+   POST LIST — dot-leader строки: 00  title ............ 2026-04-17  →
+   =========================================================================== */
+
+.pl-section-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--muted-2);
+    margin: 8px 0 12px;
+}
+
+.post-list {
+    list-style: none;
+    margin: 0 0 32px;
+    padding: 0;
+}
+
+.pl-row + .pl-row {
+    border-top: 1px dashed var(--line);
+}
+
+.pl-link {
+    display: grid;
+    grid-template-columns: auto auto 1fr auto auto auto;
+    align-items: center;
+    gap: 0 14px;
+    padding: 16px 10px;
+    color: var(--fg);
+    text-decoration: none;
+    box-shadow: none;
+    border-radius: var(--radius);
+    transition: background 0.18s ease, padding 0.18s ease;
+}
+
+/* Cover thumbnail */
+
+.pl-cover {
+    display: block;
+    flex-shrink: 0;
+    width: 88px;
+    height: 58px;
+    overflow: hidden;
+    border-radius: 4px;
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    transition: border-color 0.18s ease, transform 0.18s ease;
+}
+
+.pl-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s ease, filter 0.25s ease;
+    filter: saturate(0.85);
+}
+
+.pl-cover-empty {
+    background:
+        repeating-linear-gradient(
+            45deg,
+            transparent 0 6px,
+            color-mix(in oklab, var(--line) 60%, transparent) 6px 7px
+        ),
+        var(--panel-2);
+}
+
+.pl-link:hover .pl-cover {
+    border-color: var(--accent);
+}
+
+.pl-link:hover .pl-cover img {
+    transform: scale(1.05);
+    filter: saturate(1);
+}
+
+.pl-link:hover {
+    background: color-mix(in oklab, var(--accent) 4%, transparent);
+}
+
+.pl-link:hover .pl-title { color: var(--accent); }
+.pl-link:hover .pl-arrow { transform: translate(3px, -2px); color: var(--accent); }
+.pl-link:hover .pl-num { color: var(--accent); }
+
+.pl-num {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    align-self: baseline;
+    min-width: 2em;
+    transition: color 0.18s ease;
+}
+
+.pl-title-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.pl-title {
+    font-family: var(--display);
+    font-size: clamp(18px, 2.2vw, 22px);
+    line-height: 1.2;
+    letter-spacing: -0.035em;
+    color: var(--fg);
+    transition: color 0.18s ease;
+}
+
+.pl-draft {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent-2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-left: 8px;
+    padding: 1px 6px;
+    border: 1px solid var(--accent-2);
+    border-radius: 3px;
+    vertical-align: 0.12em;
+}
+
+.pl-summary {
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.45;
+    max-width: 65ch;
+}
+
+.pl-leader {
+    flex: 1;
+    align-self: center;
+    height: 2px;
+    background-image: radial-gradient(circle, var(--muted-2) 1.1px, transparent 1.3px);
+    background-size: 7px 2px;
+    background-position: 0 50%;
+    background-repeat: repeat-x;
+    opacity: 0.9;
+    transition: opacity 0.18s ease, background-image 0.18s ease;
+    min-width: 30px;
+}
+
+.pl-link:hover .pl-leader {
+    background-image: radial-gradient(circle,
+        color-mix(in oklab, var(--accent) 60%, var(--muted-2)) 1.1px,
+        transparent 1.3px);
+    opacity: 1;
+}
+
+.pl-meta {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--fg-2);
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+}
+
+.pl-arrow {
+    font-family: var(--mono);
+    color: var(--muted);
+    font-size: 14px;
+    transition: transform 0.18s ease, color 0.18s ease;
+    align-self: baseline;
+}
+
+/* Mobile: dot-leader схлопываем, summary остаётся */
+
+@media (max-width: 640px) {
+    .pl-link {
+        grid-template-columns: auto auto 1fr auto;
+        grid-template-areas:
+            "num  cover  title  arrow"
+            ".    .      meta   .    ";
+        gap: 4px 12px;
+        padding: 12px 4px;
+        align-items: center;
+    }
+    .pl-num       { grid-area: num; align-self: center; }
+    .pl-cover     { grid-area: cover; width: 56px; height: 40px; }
+    .pl-title-wrap { grid-area: title; align-self: center; }
+    .pl-leader    { display: none; }
+    .pl-meta      { grid-area: meta; font-size: 11px; margin-top: 4px; }
+    .pl-arrow     { grid-area: arrow; align-self: center; }
+}
+
+@media (max-width: 400px) {
+    .pl-cover { width: 48px; height: 34px; }
+    .pl-link { gap: 3px 10px; }
+    .pl-num { font-size: 12px; }
+    .pl-title { font-size: 16px; }
+}
+
+/* ===========================================================================
+   PAGE HEADER (list/section/terms) — тот же CLI-slug что и у single
+   =========================================================================== */
+
+.page-header-cli {
+    padding: 16px 0 24px;
+    margin-bottom: 24px;
+    border-bottom: 1px dashed var(--line);
+}
+
+.page-header-cli h1 {
+    font-family: var(--display);
+    font-size: clamp(28px, 4vw, 40px);
+    letter-spacing: -0.045em;
+    margin: 0;
+    line-height: 1.1;
+}
+
+.page-header-cli .post-description {
+    font-family: var(--sans);
+    color: var(--muted);
+    font-size: 15px;
+    margin-top: 10px;
+}
+
+.ph-rss {
+    color: var(--muted-2);
+    transition: color 0.15s ease;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.ph-rss:hover {
+    color: var(--accent);
+}
+
+/* Pagination */
+
+.pl-pagination {
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 18px 0;
+    border-top: 1px dashed var(--line);
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.pl-pagination a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.pl-pagination a:hover {
+    color: var(--accent);
+}

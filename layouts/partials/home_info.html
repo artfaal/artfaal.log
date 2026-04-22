@@ -1,0 +1,24 @@
+{{- with site.Params.homeInfoParams }}
+<section class="home-hero">
+    <div class="hh-prompt" aria-hidden="true">
+        <span class="hh-user">artfaal</span><!--
+     --><span class="hh-sep">@</span><!--
+     --><span class="hh-host">log</span><!--
+     --><span class="hh-sep">:</span><!--
+     --><span class="hh-tilde">~/posts</span><!--
+     --><span class="hh-sep">$ </span><!--
+     --><span class="hh-cmd">ls -la</span><!--
+     --><span class="hh-cursor"></span>
+    </div>
+
+    <h1 class="hh-title">{{ .Title | markdownify }}</h1>
+
+    {{- with .Content }}
+    <div class="hh-content">{{ . | markdownify }}</div>
+    {{- end }}
+
+    <footer class="hh-foot">
+        {{ partial "social_icons.html" (dict "align" site.Params.homeInfoParams.AlignSocialIconsTo) }}
+    </footer>
+</section>
+{{- end }}
