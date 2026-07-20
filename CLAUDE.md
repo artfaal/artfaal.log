@@ -44,6 +44,7 @@ themes/PaperMod/            — submodule, ЧИТАТЬ можно, ПИСАТЬ
 - **`cover.image` в front matter — относительный путь в Bundle.** `relative: true` обязательно.
 - **Заголовки секций** (Posts/Tags) приходят из `content/{posts,tags}/_index.md` — править там, не в шаблонах.
 - **Draft-посты** скрыты билдом (`buildDrafts = false`) — не видны даже в списках.
+- **Публикация и анонс в Telegram** (rhash, «ссылка-точка», проверка через «Избранное») — канон в README, раздел «Telegram Instant View». Здесь не дублировать.
 
 ### Изображения
 - **Только WebP** в `content/posts/*/*.webp` и `static/`. `.gitignore` блокирует jpg/png/PNG.
